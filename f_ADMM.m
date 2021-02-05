@@ -1,17 +1,9 @@
-function [ E,Pb,time,iters ] = f_ADMM( coeffs,Pdrv,E0,Pbmin,Pbmax,xmin,xmax,P,C,R,V,misc )
-
+function [ E, u, time, iterations ] = f_ADMM( coeffs,Pdrv,E0,Pbmin,Pbmax,xmin,xmax,P,C,R,V,misc )
 
 N = length(Pbmin);
 
 rho1 = 2.34E-4;
-rho2 = 8.86E-9;
-
-rho1 = 2.34E-4;
 rho2 = 1E-8;
-
-normr = [];
-normr2 = [];
-norms = [];
 
 alpha2 = coeffs(:,1);
 alpha1 = coeffs(:,2);
@@ -22,35 +14,23 @@ beta0 = coeffs(:,6);
 
 %% Feasibility check
 
-%% Algorithm
+%% Initialization (these operations can be performed offline and are not timed)
 
 u = zeros(N,1);
-x = zeros(N,1);
+u(C) = Pbmin(C);
 zeta = zeros(N,1);
-zetahold = zeros(N,1);
 lambda1 = zeros(N,1);
 lambda2 = zeros(N,1);
-r = zeros(2*N,1);
-s = zeros(2*N,1);
-
-u(C) = Pbmin(C);
 
 I = eye(N);
 Psi = tril(ones(N,N));
-M = inv(rho1*I + rho2*(Psi')*Psi);
-M2 = (rho1/rho2 * inv(Psi) * (inv(Psi)') + I);
-L = chol(M2)';
-LT = sparse(L');
+M = (rho1/rho2 * inv(Psi) * (inv(Psi)') + I);
+L = chol(M)';
 L = sparse(L);
 Diff = sparse(inv(Psi));
 Difft = sparse(inv(Psi)');
 
-PbmaxP = Pbmax(P);
-PbminP = Pbmin(P);
-alpha2P = alpha2(P);
-alpha1P = alpha1(P);
-PdrvP = Pdrv(P);
-
+%% Algorithm
 tic
 
 iterations = 0;
@@ -94,8 +74,6 @@ end
 
 time = toc;
 
-Pb = u;
 E = E0 - cumsum(u);
-iters = iterations;
 
 return
