@@ -20,7 +20,7 @@ This respository contains the following files:
 
 # Input data
 
-Unfortunately, I could not make the entire simulations included in [1] publicly available as the engine and motor data is proprietary. The __d_inputs.mat__ files therefore contain the inputs to the ADMM solver (generated using the method detailed in section X in [1]) for the FTP75 drive cycle. The __d_inputs.mat__ file contains the following data (where N is the duration of the FTP75 cycle in seconds):
+The numerical example is the FTP75 drive cycle, where the road gradient is set to two degrees uphill for the first half of the journey, and two degrees downhill for the second half of the journey. Unfortunately, I could not make the code for the entire simulations publicly available as the engine and motor data is proprietary, so the data provided in __d_inputs.mat__ are the processed values that are provided directly to the ADMM solver (the method for generating these values from the drive cycle is detailed extensively in section 2 in [1]). The __d_inputs.mat__ file contains the following data (where N is the duration of the FTP75 cycle in seconds):
 
 - __coeffs -__ A Nx6 array where the columns correspond to the alpha and beta values as 1=alpha2, 2=alpha1, 3=alpha0, 4=beta2, 5=beta1, 6=beta0.
 - __Elowerlim -__ The lower limit on the battery's energy in joules (scalar).
