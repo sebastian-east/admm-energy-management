@@ -10,6 +10,7 @@ misc.maxIterations = 2000;
 misc.Emax = Emax;
 
 [E, Pb, time, iters] = f_ADMM(coeffs,Pdrv,Estart,Pbmin,Pbmax,Elowerlim,Eupperlim,P,C,R,V,misc);
+fprintf('Time taken using ADMM = %.2f s\n', time)
 figure(1)
 plot(E)
 xlabel('Time (s)')
@@ -19,6 +20,7 @@ legend('ADMM')
 
 try
     [E, Pb, time, iters] = f_CVX(coeffs,Pdrv,Estart,Pbmin,Pbmax,Elowerlim,Eupperlim,P,C,R,V,misc);
+    fprintf('Time taken using CVX = %.2f s\n', time)
     hold on
     plot(E, '--')
     plot([0 N], [Elowerlim Elowerlim], 'r')
