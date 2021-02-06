@@ -38,30 +38,41 @@ flag = 1;
 
 while flag
     
+    % The u update for k in P is the solution of a convex optimization
+    % problem. This is solved using a newton method that is included in the
+    % function f_BacktrackingNewtonVector
     u(P) = f_BacktrackingNewtonVector(alpha0(P), alpha1(P), alpha2(P), beta0(P), beta1(P), beta2(P), V, R, Pdrv(P), rho1, zeta(P), lambda1(P), Pbmin(P), Pbmax(P));
     
+    % The x update is trivial
     x = E0 - cumsum(zeta) - lambda2;
     x(x > xmax) = xmax;
     x(x < xmin) = xmin;
     
-    vec = rho1 * (u + lambda1) - rho2 * cumsum(x - E0 + lambda2, 'reverse');
-    
+    %hold the current value of zeta for residual calculations
     zetahold = zeta;
     
+    % The zeta update is solved using a method detailed in Appendix D of 
+    % "Optimal Power Allocation in Battery/Supercapacitor Electric Vehicles 
+    % using Convex Optimization", available at
+    % https://ieeexplore.ieee.org/document/9193947
+    % and
+    % https://arxiv.org/abs/2005.03678
+    vec = rho1 * (u + lambda1) - rho2 * cumsum(x - E0 + lambda2, 'reverse');
     vec = vec / rho2;
     vec = Difft * vec; 
     vec = Diff * vec; 
     vec = L \ vec;
     zeta = L' \ vec;
     
+    % The residual and Lagrange multiplier updates are also trivial
     r = [u - zeta; x + cumsum(zeta) - E0];
     s = [rho1 * (zetahold - zeta); rho2*cumsum(zetahold - zeta)];
-    
     lambda1 = lambda1 + (u - zeta);
     lambda2 = lambda2 + (x + cumsum(zeta) - E0);
     
     iterations = iterations + 1;
     
+    % Termination criteria
     if iterations > misc.maxIterations
         flag = 0;
     end
