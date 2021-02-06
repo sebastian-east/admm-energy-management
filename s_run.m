@@ -20,7 +20,6 @@ legend('ADMM')
 
 try
     [E, Pb, time, iters] = f_CVX(coeffs,Pdrv,Estart,Pbmin,Pbmax,Elowerlim,Eupperlim,P,C,R,V,misc);
-    fprintf('Time taken using CVX = %.2f s\n', time)
     hold on
     plot(E, '--')
     plot([0 N], [Elowerlim Elowerlim], 'r')

@@ -48,8 +48,8 @@ cvx_begin
     %Phi*E0 - cumsum(Pb) >= Phi*xmin
 cvx_end
 
-iterations = i;
-t = toc(ticmain);
+iters = i;
+time = toc(ticmain);
 E = E0 - cumsum(Pb);
 
 end
